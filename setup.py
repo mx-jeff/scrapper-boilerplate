@@ -1,11 +1,11 @@
 # Always prefer setuptools over distutils
-from setuptools import setup, find_packages, parse
+from setuptools import setup, find_packages
 
 # This call to setup() does all the work
 setup(
-    name="job-hunting",
-    version="0.2.0",
-    description="Package that automate selection and subscription of jobs",
+    name="scrapper-boilerplate",
+    version="0.1.0",
+    description="Scrapping/Automating tools, userSwitching, anti-bot detection and more...",
     long_description_content_type="text/markdown",
     long_description=open('README.md', encoding='utf-8').read(),
     url="https://job-hunting.readthedocs.io/",

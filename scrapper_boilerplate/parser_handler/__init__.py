@@ -24,3 +24,11 @@ def init_crawler(url):
 
 def init_parser(html):
     return BeautifulSoup(html, "lxml")
+
+
+def remove_whitespaces(text):
+    return " ".join(text.split())
+
+
+def remove_duplicates_on_list(array):
+    return list(dict.fromkeys(array))

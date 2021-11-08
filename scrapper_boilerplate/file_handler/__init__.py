@@ -18,7 +18,7 @@ def remove_duplicates():
 def save_to_json(data, filename):
     print('Salvando os dados em JSON')
     with open(f'{filename}.json', 'w', encoding='utf-8') as file:
-        json.dump(data, file, ensure_ascii=False)
+        json.dump(data, file, indent=4, ensure_ascii=False)
 
 
 

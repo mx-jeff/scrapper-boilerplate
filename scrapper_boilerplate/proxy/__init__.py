@@ -3,7 +3,6 @@ from time import sleep
 from random import choice
 import requests
 from selenium import webdriver
-import os
 from dotenv import load_dotenv
 
 

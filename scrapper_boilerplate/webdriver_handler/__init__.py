@@ -1,7 +1,17 @@
+import logging
 from time import sleep
+from scrapper_boilerplate.setup import setSelenium
+from scrapper_boilerplate.parser_handler import init_parser
 
 
-def scroll(driver):
+def scrolldown(driver):
+    """
+    Scroll down the page
+    args:
+        - driver: Selenium Webdriver
+    return: void
+    """
+
     SCROLL_PAUSE_TIME = 20
 
     # Get scroll height
@@ -23,25 +33,64 @@ def scroll(driver):
 
 
 def smooth_scroll(driver):
-    scheight = .1
-    while scheight < 9.9:
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight/%s);" % scheight)
-        scheight += .01
+    """
+    Smooth scroll the page
+    args:
+        - driver: Selenium Webdriver
+    returns:
+        - void
+    """
+    scroll = .1
+    while scroll < 9.9:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight/%s);" % scroll)
+        scroll += .01
 
 
-def dynamic_page(driver, url):
-    driver.get(url)
-    # driver.implicitly_wait(220)
-    sleep(10)
-    html = driver.find_element_by_tag_name('html')
-    return html.get_attribute('outerHTML')
+def load_dynamic_page(url, headless=True):
+    """
+    Load a dynamic page
+    args:
+        - url: str, the url of the page you want to load
+        - headless: bool, True if you want to run the browser in headless mode
+    returns:
+        - driver: Selenium Webdriver
+    """
+
+    with setSelenium(headless=headless) as driver:
+        driver.get(url)
+        driver.implicitly_wait(220)
+        html = driver.find_element_by_tag_name('html')
+        return init_parser(html.get_attribute('outerHTML'))
+
+
+def load_code(driver):
+    """
+    Load code from a page
+
+    args:
+        - driver: Selenium Webdriver
+    
+    returns:
+        - code: Beautifulsoap Obj, the code from the page
+    """
+
+    code = driver.page_source
+    return init_parser(code)
 
 
 def check_tag(tag):
+    """
+    Check if the tag is valid
+    args:
+        - tag: str, the tag you want to check
+    returns:
+        - bool: True if the tag is valid, 'Não localizado...':str otherwise
+    """
     try:
         handler = tag
         return handler
 
     except Exception as error:
         print('Error')
+        logging.error(error)
         return 'Não localizado...'

@@ -2,19 +2,45 @@ import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from fake_useragent import UserAgent
-from utils.build import resource_path
-from utils.proxy import init_proxy
+from scrapper_boilerplate.build import resource_path
+from scrapper_boilerplate.proxy import init_proxy
 from dotenv import load_dotenv
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 
-def setSelenium(console=True, proxy=False):
-    # configuração do selenium
+def choose_driver(driver_name):
+    if driver_name == "chrome":
+        return ChromeDriverManager().install()
+    elif driver_name == "firefox":
+        return GeckoDriverManager().install()
+    elif driver_name == "edge":
+        return EdgeChromiumDriverManager().install()
+    else:
+        return ChromeDriverManager().install()
+
+
+def setSelenium(headless=True, proxy=False, remote_webdriver=False, driver_name="chrome"):
+    """
+    Set Selenium Webdriver
+    args: 
+        - headless: bool, True if you want to run the browser in headless mode
+        - proxy: bool, True if you want to use a proxy
+        - remote_webdriver: bool, True if you want to download and use the remote webdriver
+        - driver_name: str, the name of the driver you want to use
+
+    returns:
+        - webdriver: Selenium Webdriver
+    """
+
+
     chrome_options = Options()
     ua = UserAgent()
     userAgent = ua.random
     load_dotenv()
 
-    if not console:
+    if headless:
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
@@ -40,7 +66,11 @@ def setSelenium(console=True, proxy=False):
     prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
 
-    path = os.getenv('CHROMEDRIVER_PATH')
+    if remote_webdriver:
+        path = choose_driver(driver_name)
+
+    else:
+        path = os.getenv('CHROMEDRIVER_PATH')
 
     if proxy:
         PROXY = init_proxy()

@@ -11,12 +11,12 @@ class TelegramBot:
     - to access token, create bot in @botFather and paste the token
     """ 
 
-    def __init__(self, root_path):
+    def __init__(self, root_path, chat_id:list):
         print('> iniciando módulo do telegram!')
         load_dotenv(os.path.join(root_path, '.env'))
         self.TOKEN = os.environ.get("TELEGRAM_TOKEN")
         self.bot = telegram.Bot(token=self.TOKEN)
-        self.CHAT_ID = [1593930824]
+        self.CHAT_ID = chat_id
 
     def send_message(self, msg):
         try:

@@ -7,3 +7,5 @@ from scrapper_boilerplate.setup import setSelenium
 from scrapper_boilerplate.telegram import TelegramBot
 from scrapper_boilerplate.timer import generate_random_time
 from scrapper_boilerplate.webdriver_handler import *
+from scrapper_boilerplate.parser_handler import *
+from scrapper_boilerplate.output import log

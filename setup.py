@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 # This call to setup() does all the work
 setup(
     name="scrapper-boilerplate",
-    version="0.2.2",
+    version="0.2.3",
     description="Scrapping/Automating tools, userSwitching, anti-bot detection and more...",
     long_description_content_type="text/markdown",
     long_description=open('README.md', encoding='utf-8').read(),
@@ -33,6 +33,7 @@ setup(
         "python-telegram-bot",
         "lxml",
         "fake-useragent",
-        "webdriver-manager"
+        "webdriver-manager",
+        "SQLAlchemy"
     ]
 )

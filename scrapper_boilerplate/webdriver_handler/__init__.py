@@ -4,6 +4,12 @@ from scrapper_boilerplate.setup import setSelenium
 from scrapper_boilerplate.parser_handler import init_parser
 
 
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
+
 def scrolldown(driver):
     """
     Scroll down the page
@@ -74,7 +80,7 @@ def load_code(driver):
         - code: Beautifulsoap Obj, the code from the page
     """
 
-    code = driver.page_source
+    code = driver.get_attribute('outerHTML')
     return init_parser(code)
 
 
@@ -94,3 +100,24 @@ def check_tag(tag):
         print('Error')
         logging.error(error)
         return 'Não localizado...'
+
+
+def explicit_wait(driver, tag, timeout=10):
+    """
+    Explicit wait for a tag
+    args:
+        - driver: Selenium Webdriver
+        - tag: str, the tag you want to wait for
+        - timeout: int, the timeout of the wait
+    returns:
+        - handler: str, the tag handler
+    """
+    try:
+        handler = WebDriverWait(driver, timeout).until(
+            EC.presence_of_element_located((By.TAG_NAME, tag))
+        )
+        return handler
+    
+    except Exception as error:
+        logging.error(error)
+        return

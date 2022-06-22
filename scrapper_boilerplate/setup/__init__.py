@@ -8,6 +8,9 @@ from dotenv import load_dotenv
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from scrapper_boilerplate.warnings import disable_warnings
+
+disable_warnings()
 
 
 def choose_driver(driver_name):

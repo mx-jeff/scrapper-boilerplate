@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def scrolldown(driver):
+def scrolldown(driver, element=None):
     """
     Scroll down the page
     args:
@@ -18,27 +18,30 @@ def scrolldown(driver):
     return: void
     """
 
+    if not element:
+        element = driver
+
     SCROLL_PAUSE_TIME = 20
 
     # Get scroll height
-    last_height = driver.execute_script("return document.body.scrollHeight")
+    last_height = driver.execute_script("return arguments[0].scrollHeight", element)
 
     while True:
         # Scroll down to bottom
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        driver.execute_script("arguments[0].scrollTo(0, arguments[0].scrollHeight);", element)
 
         # Wait to load page and increments one more second
         SCROLL_PAUSE_TIME += 1
         sleep(SCROLL_PAUSE_TIME)
 
         # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return document.body.scrollHeight")
+        new_height = driver.execute_script("return arguments[0].scrollHeight", element)
         if new_height == last_height:
             break
         last_height = new_height
 
 
-def smooth_scroll(driver):
+def smooth_scroll(driver, element=None):
     """
     Smooth scroll the page
     args:
@@ -46,9 +49,14 @@ def smooth_scroll(driver):
     returns:
         - void
     """
+
+    
+    if not element:
+        element = driver
+
     scroll = .1
     while scroll < 9.9:
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight/%s);" % scroll)
+        driver.execute_script("arguments[0].scrollTo(0, arguments[0].scrollHeight/%s);" % (element, scroll))
         scroll += .01
 
 
@@ -102,7 +110,7 @@ def check_tag(tag):
         return 'Não localizado...'
 
 
-def explicit_wait(driver, tag, timeout=10):
+def explicit_wait(driver, tag, element, timeout=10):
     """
     Explicit wait for a tag
     args:
@@ -114,7 +122,7 @@ def explicit_wait(driver, tag, timeout=10):
     """
     try:
         handler = WebDriverWait(driver, timeout).until(
-            EC.presence_of_element_located((By.TAG_NAME, tag))
+            EC.presence_of_element_located((tag, element))
         )
         return handler
     

@@ -13,5 +13,5 @@ class TestTelegramBot(unittest.TestCase):
         self.bot = TelegramBot(self.TOKEN, self.CHAT_ID)
 
     def test_send_file(self):
-        filename = "teste.txt"
+        filename = "test.jpg"
         self.bot.send_file(filename)

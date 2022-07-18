@@ -43,6 +43,17 @@ def JSONtoExcel(filename):
         print('Falha na conversão, Arquivo incorreto ou não existe...')
 
 
+def CSVtoExcel(filename:str):
+    """
+    convert csv to excel
+    filename: str
+    return: void
+    """
+    df = pd.read_csv(filename)
+    df.to_excel(filename.replace('.csv', '.xlsx'))
+    print('Convensão realizada com sucesso!')
+
+
 def load_json(json_name:str="data.json"):
     """
     Loads a json file and returns a dataframe
@@ -88,4 +99,4 @@ def dataToExcel(dataDict:dict, filename:str):
 
     compressed_data = { k: [v] for k, v in dataDict.items() }
     df = pd.DataFrame(compressed_data)
-    df.to_excel(filename, mode="a", index=False, header=not os.path.exists(filename))
+    df.to_excel(filename, index=False, header=not os.path.exists(filename))

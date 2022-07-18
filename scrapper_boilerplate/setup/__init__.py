@@ -8,9 +8,7 @@ from dotenv import load_dotenv
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
-from scrapper_boilerplate.warnings import disable_warnings
-
-disable_warnings()
+from selenium.webdriver.chrome.service import Service
 
 
 def choose_driver(driver_name):
@@ -85,4 +83,4 @@ def setSelenium(headless=True, rotate_useragent=False, remote_webdriver=False, d
     #     PROXY = init_proxy()
     #     chrome_options.add_argument('--proxy-server=%s' % PROXY)
 
-    return webdriver.Chrome(chrome_options=chrome_options, executable_path=resource_path(path), service_log_path='NUL')
+    return webdriver.Chrome(options=chrome_options, service=Service(executable_path=resource_path(path), log_path='NUL'))

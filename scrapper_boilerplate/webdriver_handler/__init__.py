@@ -18,24 +18,35 @@ def scrolldown(driver, element=None):
     return: void
     """
 
-    if not element:
-        element = driver
-
-    SCROLL_PAUSE_TIME = 20
+    SCROLL_PAUSE_TIME = 0.5
 
     # Get scroll height
-    last_height = driver.execute_script("return arguments[0].scrollHeight", element)
+    if element:
+        last_height = driver.execute_script("return arguments[0].scrollHeight", element)
+
+    else:
+        last_height = driver.execute_script("return document.body.scrollHeight")
 
     while True:
         # Scroll down to bottom
-        driver.execute_script("arguments[0].scrollTo(0, arguments[0].scrollHeight);", element)
+        if element:
+            driver.execute_script("arguments[0].scrollTo(0, arguments[0].scrollHeight);", element)
+
+        else: 
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
         # Wait to load page and increments one more second
         SCROLL_PAUSE_TIME += 1
         sleep(SCROLL_PAUSE_TIME)
 
         # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return arguments[0].scrollHeight", element)
+        if element:
+            new_height = driver.execute_script("return arguments[0].scrollHeight", element)
+        
+        else:
+            new_height = driver.execute_script("return document.body.scrollHeight")
+
+
         if new_height == last_height:
             break
         last_height = new_height
@@ -50,13 +61,13 @@ def smooth_scroll(driver, element=None):
         - void
     """
 
-    
-    if not element:
-        element = driver
-
     scroll = .1
     while scroll < 9.9:
-        driver.execute_script("arguments[0].scrollTo(0, arguments[0].scrollHeight/%s);" % (element, scroll))
+        if not element:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight/%s);" % scroll)
+        
+        else:
+            driver.execute_script("arguments[0].scrollTo(0, arguments[0].scrollHeight/%s);" % (element, scroll))
         scroll += .01
 
 
@@ -73,11 +84,11 @@ def load_dynamic_page(url, headless=True):
     with setSelenium(headless=headless) as driver:
         driver.get(url)
         driver.implicitly_wait(220)
-        html = driver.find_element_by_tag_name('html')
+        html = driver.find_element(By.TAG_NAME, 'html')
         return init_parser(html.get_attribute('outerHTML'))
 
 
-def load_code(driver):
+def load_code(driver, full_page=False):
     """
     Load code from a page
 
@@ -87,6 +98,9 @@ def load_code(driver):
     returns:
         - code: Beautifulsoap Obj, the code from the page
     """
+    if full_page:
+        code = driver.page_source
+        return init_parser(code)
 
     code = driver.get_attribute('outerHTML')
     return init_parser(code)

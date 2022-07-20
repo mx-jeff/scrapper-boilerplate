@@ -1,4 +1,6 @@
 import os
+import logging
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from fake_useragent import UserAgent
@@ -84,3 +86,18 @@ def setSelenium(headless=True, rotate_useragent=False, remote_webdriver=False, d
     #     chrome_options.add_argument('--proxy-server=%s' % PROXY)
 
     return webdriver.Chrome(options=chrome_options, service=Service(executable_path=resource_path(path), log_path='NUL'))
+
+
+def init_log(filesave=False, filename="debug.log", level=logging.INFO):
+    """
+    Initialize the log
+    args: 
+        - filesave: bool, True if you want to save the log in a file
+        - filename: str, the name of the file you want to save the log
+    """
+    
+    if filesave:
+        logging.basicConfig(level=level, format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S', filename=filename, filemode='a')
+
+    else:
+        logging.basicConfig(level=level, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')

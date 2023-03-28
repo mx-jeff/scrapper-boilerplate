@@ -108,7 +108,7 @@ def init_log(filesave=False, filename="debug.log", level=logging.INFO, **kwargs)
     # create console handler and set level to info
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", datefmt='%d/%m/%Y %H:%M:%S')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     
@@ -116,7 +116,7 @@ def init_log(filesave=False, filename="debug.log", level=logging.INFO, **kwargs)
         # create error file handler and set level to error
         handler = logging.FileHandler(os.path.join("error.log"),"w", encoding=None, delay="true")
         handler.setLevel(logging.ERROR)
-        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", datefmt='%d/%m/%Y %H:%M:%S')
         handler.setFormatter(formatter)
         logger.addHandler(handler)
    
@@ -124,6 +124,6 @@ def init_log(filesave=False, filename="debug.log", level=logging.INFO, **kwargs)
         # create debug file handler and set level to debug
         handler = logging.FileHandler(os.path.join(filename),"w")
         handler.setLevel(level)
-        formatter = logging.Formatter("%(levelname)s - %(message)s")
+        formatter = logging.Formatter("%(levelname)s - %(message)s", datefmt='%d/%m/%Y %H:%M:%S')
         handler.setFormatter(formatter)
         logger.addHandler(handler)

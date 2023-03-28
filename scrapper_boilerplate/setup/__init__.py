@@ -13,7 +13,7 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.chrome.service import Service
 
 
-def choose_driver(driver_name):
+def choose_driver(driver_name:str):
     if driver_name == "chrome":
         return ChromeDriverManager().install()
     elif driver_name == "firefox":
@@ -24,7 +24,7 @@ def choose_driver(driver_name):
         return ChromeDriverManager().install()
 
 
-def setSelenium(headless=True, rotate_useragent=False, remote_webdriver=False, driver_name="chrome", profile=False, profile_name="default"):
+def setSelenium(headless:bool=True, rotate_useragent:bool=False, remote_webdriver:bool=False, driver_name:str="chrome", profile:bool=False, profile_name:str="default") -> webdriver.Chrome :
     """
     Set Selenium Webdriver
     args: 
@@ -32,9 +32,11 @@ def setSelenium(headless=True, rotate_useragent=False, remote_webdriver=False, d
         - rotate_useragent: bool, True if you want to rotate the useragent
         - remote_webdriver: bool, True if you want to download and use the remote webdriver
         - driver_name: str, the name of the driver you want to use
+        - profile_name: str, the name of the profile
+        - profile:bool, True if you want to use profiles
 
     returns:
-        - webdriver: Selenium Webdriver
+        - webdriver: Selenium Webdriver instance
     """
 
 
@@ -88,19 +90,18 @@ def setSelenium(headless=True, rotate_useragent=False, remote_webdriver=False, d
     return webdriver.Chrome(options=chrome_options, service=Service(executable_path=resource_path(path), log_path='NUL'))
 
 
-def init_log(filesave=False, filename="debug.log", level=logging.INFO, **kwargs):
-    """
-    Initialize the log
-    args: 
-        - filesave: bool, True if you want to save the log in a file
-        - filename: str, the name of the file you want to save the log
-    """
+def init_log(filesave:bool=False, filename:str="debug.log", level=logging.INFO, **kwargs) -> None:
     
-    # if filesave:
-    #     logging.basicConfig(level=level, format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S', filename=filename, filemode='a')
+    """setup a configured custom log handler
 
-    # else:
-    #     logging.basicConfig(level=level, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+    parameters:
+        - filename (str): log filename
+        - filesave (bool): if save to file or not (default:False)
+        - level (logging): log leve (default:logging.INFO)
+
+    returns:
+        None
+    """
 
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)

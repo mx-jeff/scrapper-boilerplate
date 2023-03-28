@@ -1,4 +1,6 @@
 import requests
+import re
+import logging
 
 from bs4 import BeautifulSoup
 from requests.exceptions import InvalidSchema
@@ -90,3 +92,36 @@ def remove_whitespaces(text):
 
 def remove_duplicates_on_list(array):
     return list(dict.fromkeys(array))
+
+
+def check_telephone(word):
+    """
+    Check if word contains a valid telephone number
+    """
+    target_tel = word.replace('.', ' ')
+    match = re.findall(r'\(\d{2}\)|\d{2}\s* \d{4,5}-\d{4}', target_tel)
+    if match:  
+        return "".join(match)
+    else:
+        return False
+
+
+def check_tag(soap, tag, first=True, check_text=True):
+    """
+    Check if the tag is valid
+    args:
+        - tag: str, the tag you want to check
+    returns:
+        - bool: True if the tag is valid, 'Não localizado...':str otherwise
+    """
+    try:
+        if first:
+            element = soap.select_one(tag).text if check_text else soap.select_one(tag)
+            if not element: return
+
+        element = soap.select(tag)
+        if not element: return
+
+    except Exception as error:
+        logging.error(error)
+        return 

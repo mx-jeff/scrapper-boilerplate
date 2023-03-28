@@ -1,13 +1,17 @@
 import logging
+import random
+
 from time import sleep
+
 from scrapper_boilerplate.setup import setSelenium
 from scrapper_boilerplate.parser_handler import init_parser
-
 
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+
+from selenium.common.exceptions import TimeoutException
 
 
 def scrolldown(driver, element=None):
@@ -118,25 +122,7 @@ def load_code(driver, full_page=False):
     return init_parser(code)
 
 
-def check_tag(tag):
-    """
-    Check if the tag is valid
-    args:
-        - tag: str, the tag you want to check
-    returns:
-        - bool: True if the tag is valid, 'Não localizado...':str otherwise
-    """
-    try:
-        handler = tag
-        return handler
-
-    except Exception as error:
-        print('Error')
-        logging.error(error)
-        return 'Não localizado...'
-
-
-def explicit_wait(driver, tag, element, timeout=10):
+def explicit_wait(driver, tag, element, timeout=10, screenshot=False, screenshot_name="screenshot.png"):
     """
     Explicit wait for a tag
     args:
@@ -152,6 +138,17 @@ def explicit_wait(driver, tag, element, timeout=10):
         )
         return handler
     
-    except Exception as error:
-        logging.error(error)
+    except TimeoutException:
+        if screenshot:
+            driver.save_screenshot(screenshot_name)
+        logging.error("error to explicitly wait")
         return
+
+
+def mimic_user_input(webElement, text:str):
+    """
+    Mimic user input.
+    """
+    for char in text:
+        sleep(random.uniform(0.1, 0.2))
+        webElement.send_keys(char)

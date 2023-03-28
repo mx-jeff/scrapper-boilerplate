@@ -24,7 +24,7 @@ def choose_driver(driver_name:str):
         return ChromeDriverManager().install()
 
 
-def setSelenium(headless:bool=True, rotate_useragent:bool=False, remote_webdriver:bool=False, driver_name:str="chrome", profile:bool=False, profile_name:str="default") -> webdriver.Chrome :
+def setSelenium(headless:bool=True, rotate_useragent:bool=False, remote_webdriver:bool=True, driver_name:str="chrome", profile:bool=False, profile_name:str="default") -> webdriver.Chrome :
     """
     Set Selenium Webdriver
     args: 

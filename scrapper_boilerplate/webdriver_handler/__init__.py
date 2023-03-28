@@ -71,7 +71,7 @@ def smooth_scroll(driver, element=None):
         scroll += .01
 
 
-def load_dynamic_page(url, headless=True):
+def load_dynamic_page(url, headless=True, remote=True, scroll=False,**kwargs):
     """
     Load a dynamic page
     args:
@@ -81,9 +81,21 @@ def load_dynamic_page(url, headless=True):
         - driver: Selenium Webdriver
     """
 
-    with setSelenium(headless=headless) as driver:
+    with setSelenium(
+        headless=headless, 
+        remote_webdriver=remote, 
+        profile=kwargs.get("profile"), 
+        profile_name=kwargs.get("profile_name")
+    ) as driver:
         driver.get(url)
         driver.implicitly_wait(220)
+        
+        if scroll:
+            scrolldown(driver)
+
+        if kwargs.get("screenshot"):
+            driver.save_screenshot(kwargs.get("screenshot_name"))
+            
         html = driver.find_element(By.TAG_NAME, 'html')
         return init_parser(html.get_attribute('outerHTML'))
 

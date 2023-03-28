@@ -88,7 +88,7 @@ def setSelenium(headless=True, rotate_useragent=False, remote_webdriver=False, d
     return webdriver.Chrome(options=chrome_options, service=Service(executable_path=resource_path(path), log_path='NUL'))
 
 
-def init_log(filesave=False, filename="debug.log", level=logging.INFO):
+def init_log(filesave=False, filename="debug.log", level=logging.INFO, **kwargs):
     """
     Initialize the log
     args: 
@@ -96,8 +96,34 @@ def init_log(filesave=False, filename="debug.log", level=logging.INFO):
         - filename: str, the name of the file you want to save the log
     """
     
-    if filesave:
-        logging.basicConfig(level=level, format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S', filename=filename, filemode='a')
+    # if filesave:
+    #     logging.basicConfig(level=level, format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S', filename=filename, filemode='a')
 
-    else:
-        logging.basicConfig(level=level, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+    # else:
+    #     logging.basicConfig(level=level, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+     
+    # create console handler and set level to info
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    
+    if kwargs.get("error_sep") and filesave:
+        # create error file handler and set level to error
+        handler = logging.FileHandler(os.path.join("error.log"),"w", encoding=None, delay="true")
+        handler.setLevel(logging.ERROR)
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+   
+    if filesave:
+        # create debug file handler and set level to debug
+        handler = logging.FileHandler(os.path.join(filename),"w")
+        handler.setLevel(level)
+        formatter = logging.Formatter("%(levelname)s - %(message)s")
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)

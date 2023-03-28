@@ -3,11 +3,11 @@ import pandas as pd
 import os
 
 
-def remove_duplicates():
+def remove_duplicates(input_filename:str='input.txt', output_filename:str="output.txt"):
     print('Terminado! Verificando se existe linhas duplicadas...')
     lines_seen = set()
-    with open('profiles.txt', "w") as output_file:
-        for each_line in open('raw_profile.txt', "r"):
+    with open(output_filename, "w") as output_file:
+        for each_line in open(input_filename, "r"):
             if each_line not in lines_seen:  # check if line is not duplicate
                 output_file.write(each_line)
                 lines_seen.add(each_line)
@@ -24,19 +24,19 @@ def save_to_json(data, filename):
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def load_links(file_text):
+def load_txt_file(file_text:str):
     print('Iniciando leitura de links...')
-    with open(f'{file_text}.txt', 'r') as text:
+    with open(f'{file_text}', 'r') as text:
         return text.readlines()
 
 
-def JSONtoExcel(filename):
+def JSONtoExcel(filename:str):
     try:
         print('Iniciando convensão...')
         # temp_df = pd.read_json(f'{filename}.json')
         temp_df = load_json(filename)
         df = pd.json_normalize(temp_df)
-        df.to_excel(f'{filename}.xlsx')
+        df.to_excel(filename.replace(".json", '.xlsx'))
         print('Convensão realizada com sucesso!')
 
     except Exception as error:
@@ -65,7 +65,7 @@ def load_json(json_name:str="data.json"):
     return data
 
 
-def save_to_html(data:str, filename:str='coment.html', mode='w'):
+def save_to_html(data:str, filename:str='data.html', mode='w'):
     """
     save data to html
 

@@ -13,10 +13,12 @@ class Test_Log(unittest.TestCase):
         while True:
             if counter % 10 == 0:
                 logging.error("teste error!")
-                
+
             logging.info("Checking {}".format(counter))
             sleep(1)
             counter = counter + 1
+            if counter < 20:
+                break
 
 if __name__ == "__main__":
     unittest.main()

@@ -124,6 +124,6 @@ def init_log(filesave=False, filename="debug.log", level=logging.INFO, **kwargs)
         # create debug file handler and set level to debug
         handler = logging.FileHandler(os.path.join(filename),"w")
         handler.setLevel(level)
-        formatter = logging.Formatter("%(levelname)s - %(message)s", datefmt='%d/%m/%Y %H:%M:%S')
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", datefmt='%d/%m/%Y %H:%M:%S')
         handler.setFormatter(formatter)
         logger.addHandler(handler)

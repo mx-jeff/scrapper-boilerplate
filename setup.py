@@ -4,11 +4,11 @@ from setuptools import setup, find_packages
 # This call to setup() does all the work
 setup(
     name="scrapper-boilerplate",
-    version="0.2.10",
+    version="0.2.11",
     description="Scrapping/Automating tools, userSwitching, anti-bot detection and more...",
     long_description_content_type="text/markdown",
     long_description=open('README.md', encoding='utf-8').read(),
-    url="https://job-hunting.readthedocs.io/",
+    url="https://github.com/mx-jeff/scrapper-boilerplate",
     author="Jeferson/MxJeff",
     author_email="mx.jeferson.10@hotmail.com",
     classifiers=[

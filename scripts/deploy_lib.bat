@@ -1,1 +1,1 @@
-.\venv\scripts\activate && pip install wheel twine && python setup.py sdist bdist_wheel && twine check dist/* && twine upload dist/* && rm -rf build dist scrapper_boilerplate.egg-info
+pip install wheel twine && python setup.py sdist bdist_wheel && twine check dist/* && twine upload dist/* && rm -rf build dist scrapper_boilerplate.egg-info

@@ -6,6 +6,7 @@ from time import sleep
 from scrapper_boilerplate.setup import setSelenium
 from scrapper_boilerplate.parser_handler import init_parser
 
+from selenium.webdriver.chrome import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -122,16 +123,25 @@ def load_code(driver, full_page=False):
     return init_parser(code)
 
 
-def explicit_wait(driver, tag, element, timeout=10, screenshot=False, screenshot_name="screenshot.png"):
+def explicit_wait(driver:webdriver, tag:By, element:str, timeout:int=10, screenshot:bool=False, screenshot_name:str="screenshot.png", raise_error:bool=False) -> webdriver:
+    """explicitly wait for an element to load
+
+    Args:
+        driver (webdriver): selenium webdriver instance
+        tag (_type_): the tag instance
+        element (str): the selector of the element
+        timeout (int, optional): the limit of wait to load element. Defaults to 10.
+        screenshot (bool, optional): if enable screenshot on error. Defaults to False.
+        screenshot_name (str, optional): name of screenshot. Defaults to "screenshot.png".
+        raise_error (bool, optional): if raises timeout error or return. Defaults to False.
+
+    Raises:
+        TimeoutException: _description_
+
+    Returns:
+        webdriver: _description_
     """
-    Explicit wait for a tag
-    args:
-        - driver: Selenium Webdriver
-        - tag: str, the tag you want to wait for
-        - timeout: int, the timeout of the wait
-    returns:
-        - handler: str, the tag handler
-    """
+
     try:
         handler = WebDriverWait(driver, timeout).until(
             EC.presence_of_element_located((tag, element))
@@ -142,12 +152,19 @@ def explicit_wait(driver, tag, element, timeout=10, screenshot=False, screenshot
         if screenshot:
             driver.save_screenshot(screenshot_name)
         logging.error("error to explicitly wait")
+        
+        if raise_error: 
+            raise TimeoutException 
+        
         return
 
 
-def mimic_user_input(webElement, text:str):
-    """
-    Mimic user input.
+def mimic_user_input(webElement:webdriver, text:str):
+    """mimic user input, write in input field letter by letter
+
+    Args:
+        webElement (webdriver): the webdriver instance
+        text (str): input text
     """
     for char in text:
         sleep(random.uniform(0.1, 0.2))

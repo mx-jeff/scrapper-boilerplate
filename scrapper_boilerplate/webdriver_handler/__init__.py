@@ -3,7 +3,7 @@ import random
 
 from time import sleep
 
-from scrapper_boilerplate.setup import setSelenium
+from scrapper_boilerplate.setup import setSeleniumWith
 from scrapper_boilerplate.parser_handler import init_parser
 
 from selenium.webdriver.chrome import webdriver
@@ -86,7 +86,7 @@ def load_dynamic_page(url, headless=True, remote=True, scroll=False,**kwargs):
         - driver: Selenium Webdriver
     """
 
-    with setSelenium(
+    with setSeleniumWith(
         headless=headless, 
         remote_webdriver=remote, 
         profile=kwargs.get("profile"), 

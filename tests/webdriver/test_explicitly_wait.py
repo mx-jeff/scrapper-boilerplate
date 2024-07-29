@@ -1,16 +1,18 @@
-import unittest
-from scrapper_boilerplate import explicit_wait, setSelenium
+from scrapper_boilerplate import explicit_wait, setSeleniumWith
 from selenium.webdriver.common.by import By
 
 
-class TestExplicitlyWait(unittest.TestCase):
-    def test_explicitly_wait(self):
-        with setSelenium() as driver:
-            driver.get("https://stackoverflow.com/")
-            code = explicit_wait(driver, By.CSS_SELECTOR, 'h1', timeout=60)
-            print(code.text)
-            self.assertTrue(code)
+def test_explicitly_wait():
+    with setSeleniumWith(headless=False) as driver:
+        driver.get("https://stackoverflow.com/")
+        code = explicit_wait(driver, By.CSS_SELECTOR, 'h1', timeout=60)
+        print(code.text)
+        assert code
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_explicitly_wait():
+    with setSeleniumWith(headless=True) as driver:
+        driver.get("https://stackoverflow.com/")
+        code = explicit_wait(driver, By.CSS_SELECTOR, 'h1', timeout=60)
+        print(code.text)
+        assert code

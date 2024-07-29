@@ -1,14 +1,11 @@
 import pytest
-from selenium import webdriver
-from scrapper_boilerplate import scrolldown, smooth_scroll, setSelenium
-from time import sleep
+from scrapper_boilerplate import setSeleniumWith, scrolldown, smooth_scroll, sleep
 
 
 @pytest.fixture(scope="module")
 def driver():
-    driver = setSelenium(headless=True)
-    yield driver
-    driver.quit()
+    with setSeleniumWith(headless=True, remote_webdriver=True) as selenium_driver:
+        yield selenium_driver
 
 def test_scrolldown(driver):
     driver.get("https://www.awwwards.com/sites/heleonic")

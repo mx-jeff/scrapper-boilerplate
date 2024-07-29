@@ -2,15 +2,13 @@ import os
 import logging
 
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from fake_useragent import UserAgent
-from scrapper_boilerplate.build import resource_path
-from scrapper_boilerplate.proxy import init_proxy
 from dotenv import load_dotenv
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.webdriver.chrome.service import Service
+
+load_dotenv()
 
 
 def choose_driver(driver_name:str):
@@ -24,7 +22,31 @@ def choose_driver(driver_name:str):
         return ChromeDriverManager().install()
 
 
-def setSelenium(headless:bool=True, rotate_useragent:bool=False, remote_webdriver:bool=True, driver_name:str="chrome", profile:bool=False, profile_name:str="default") -> webdriver.Chrome :
+def setSelenium(headless=True, remote_webdriver=True, driver_name="chrome", profile=False, profile_name="default"):
+    chrome_options = webdriver.ChromeOptions()
+    if headless:
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('log-level=3')
+
+    if profile:
+        dir_path = os.getcwd()
+        profile = os.path.join(dir_path, f"{profile_name}", "profile", "wpp")
+        chrome_options.add_argument(f'user-data-dir={profile}')
+
+    if remote_webdriver:
+        path = choose_driver(driver_name)
+    else:
+        path = os.getenv('CHROMEDRIVER_PATH') 
+
+    driver = webdriver.Chrome(service=Service(executable_path=path), options=chrome_options)
+    logging.info("WebDriver initialized successfully.")
+    return driver
+
+
+class setSeleniumWith():
     """
     Set Selenium Webdriver
     args: 
@@ -39,55 +61,46 @@ def setSelenium(headless:bool=True, rotate_useragent:bool=False, remote_webdrive
         - webdriver: Selenium Webdriver instance
     """
 
+    def __init__(self, headless=True, rotate_useragent=False, remote_webdriver=True, driver_name="chrome", profile=False, profile_name="default"):
+        self.headless = headless
+        self.rotate_useragent = rotate_useragent
+        self.remote_webdriver = remote_webdriver
+        self.driver_name = driver_name
+        self.profile = profile
+        self.profile_name = profile_name
+        self.driver = None
 
-    chrome_options = Options()
-    load_dotenv()
+    def __enter__(self):
+        chrome_options = webdriver.ChromeOptions()
+        if self.headless:
+            chrome_options.add_argument("--headless=new")
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-dev-shm-usage')
+            chrome_options.add_argument('--disable-gpu')
+            chrome_options.add_argument('log-level=3')
 
-    if headless:
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
+        if self.profile:
+            dir_path = os.getcwd()
+            profile = os.path.join(dir_path, f"{self.profile_name}", "profile", "wpp")
+            chrome_options.add_argument(f'user-data-dir={profile}')
 
-    # Desabilitar notificações
-    chrome_options.add_argument("--disable-infobars")
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_experimental_option("prefs", {
-        "profile.default_content_setting_values.notifications": 2
-    })
-    # evitar detecção anti-bot
+        if self.remote_webdriver:
+            path = choose_driver(self.driver_name)
+        else:
+            path = path = os.getenv('CHROMEDRIVER_PATH')
 
-    if rotate_useragent:
-        ua = UserAgent()
-        userAgent = ua.random
-        chrome_options.add_argument(f'user-agent={userAgent}')
- 
-    chrome_options.add_argument(f'user-agent=Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36')
-    chrome_options.add_argument("--disable-blink-features")
-    chrome_options.add_argument('--disable-blink-features=AutomationControlled')
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option('useAutomationExtension', False)
-    chrome_options.add_experimental_option("detach", True)
-    # desabilitar o log do chrome
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    prefs = {"profile.default_content_setting_values.notifications": 2}
-    chrome_options.add_experimental_option("prefs", prefs)
+        self.driver = webdriver.Chrome(service=Service(executable_path=path), options=chrome_options)
+        logging.info("WebDriver initialized successfully.")
+        return self.driver
 
-    if profile:
-        dir_path = os.getcwd()
-        profile = os.path.join(f"{dir_path}/{profile_name}", "profile", "wpp")
-        chrome_options.add_argument(f'user-data-dir={profile}')
-
-    if remote_webdriver:
-        path = choose_driver(driver_name)
-
-    else:
-        path = os.getenv('CHROMEDRIVER_PATH')
-
-    # if proxy:
-    #     PROXY = init_proxy()
-    #     chrome_options.add_argument('--proxy-server=%s' % PROXY)
-
-    return webdriver.Chrome(options=chrome_options, service=Service(executable_path=resource_path(path), log_path='NUL'))
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        try:
+            if self.driver:
+                self.driver.close()
+                self.driver.quit()
+                logging.info("WebDriver quit successfully.")
+        except Exception as e:
+            logging.error(f"Error quitting WebDriver: {e}")
 
 
 def init_log(filesave:bool=False, filename:str="debug.log", level=logging.INFO, **kwargs) -> None:

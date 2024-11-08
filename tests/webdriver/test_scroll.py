@@ -1,5 +1,4 @@
 import pytest
-from selenium import webdriver
 from scrapper_boilerplate import scrolldown, smooth_scroll, setSelenium
 from time import sleep
 

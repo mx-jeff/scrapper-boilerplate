@@ -1,20 +1,15 @@
-import unittest
 import os
 from dotenv import load_dotenv
 from scrapper_boilerplate.telegram import TelegramBot
 
+load_dotenv()
+TOKEN = os.getenv('TELEGRAM_TOKEN')
+CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+bot = TelegramBot(TOKEN, CHAT_ID)
 
 
-class TestTelegramBot(unittest.TestCase):
-    def setUp(self):
-        load_dotenv()
-        self.TOKEN = os.getenv('TELEGRAM_TOKEN')
-        self.CHAT_ID = [os.getenv('TELEGRAM_CHAT_ID')]
-        self.bot = TelegramBot(self.TOKEN, self.CHAT_ID)
-
-    def test_send_message(self):
-        msg = 'Teste de envio de mensagem!'
-        status = self.bot.send_message(msg)
-        self.assertTrue(status)
-
+def test_send_message():
+    msg = 'Teste de envio de mensagem!'
+    assert bot.send_message(msg)
+        
     

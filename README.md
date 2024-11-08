@@ -7,7 +7,7 @@ Scrapping functions and for making easy for further scrapping
 
 ### (Optional) install enviroment
 
-make sure that you have python installed
+make sure that you have python 3.10 installed
 
 then install:
 

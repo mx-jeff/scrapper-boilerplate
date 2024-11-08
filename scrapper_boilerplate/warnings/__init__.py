@@ -1,6 +1,7 @@
 import sys
 import warnings
 
+
 def disable_warnings():
     """
     Disable all warnings
